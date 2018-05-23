@@ -2,80 +2,118 @@
 <html>
 
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <style>
-        h1 {
-            color: black;
+        #intro {
+            margin-top: 2em;
+            margin-bottom: 3em;
+
+        }
+
+        #intro h1 {
+            color: greenyellow;
             text-align: center;
-            font-size: 50px;
+            font-size: 60px;
+            font-style: oblique;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
         }
 
-        p {
-            color: black;
-            font-family: verdana;
-            font-size: 20px;
+        .search-area {
+            margin: 10px 0px;
         }
 
-        .textarea {
+        #cityNameValue {
             text-align: center;
-            resize: none;
-            margin-top: 50px;
-        }
-
-        .btn {
-            position: relative;
-            left: 800px;
-
+            width: 100%;
         }
 
         .table .cityNameColumn {
-            width: 30% ;
+            width: 30%;
+        }
+
+        .btn-area {
+            text-align: right;
+            margin: 5px 0px;
+        }
+
+        @media (max-width: 576px) {
+            #send-btn {
+                margin: 15px 0px;
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h1>How is weather today?</h1>
-    <p>
-        The city you want to learn about the weather :
-        <textarea id="cityNameValue" class="textarea" rows="1" cols="30"></textarea>
-    </p>
-    <button type="button" onclick="sendRequest()" class="btn">Send</button>
-    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="intro">
+                    <h1>How is weather today?</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row search-area">
+            <div class="col-sm-6">
+                <label id="search-description">City you want to learn about the weather : </label>
+            </div>
+            <div class="col-sm-6">
+                <input id="cityNameValue" class="textarea" type="text" />
+                <div class="btn-area">
+                    <input id="send-btn" class="btn btn-primary" type="button" onclick="sendRequest()" value="Send">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="cityNameColumn" scope="col">CityName</th>
+                            <th class="values" scope="col">Values</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">°C</th>
+                            <td id="temperature">-</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Status</th>
+                            <td id="weather_status">-</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Country</th>
+                            <td id="country">-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Wind Speed (km)</th>
+                            <td id="wind_speed">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="cityNameColumn" scope="col">CityName</th>
-                <th class="values" scope="col">Values</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">°C</th>
-                <td id="temperature">-</td>
-
-            </tr>
-            <tr>
-                <th scope="row">Status</th>
-                <td id="weather_status">-</td>
-
-            </tr>
-            <tr>
-                <th scope="row">Country</th>
-                <td id="country">-</td>
-            </tr>
-            <tr>
-                <th scope="row">Wind Speed (km)</th>
-                <td id="wind_speed">-</td>
-            </tr>
-        </tbody>
-    </table>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
 
     <script>
         function sendRequest() {
@@ -97,16 +135,14 @@
             httpRequest.send()
         }
         function insertValuesFromApi(values) {
-           document.getElementById('temperature').innerHTML = values.main.temp
-           document.getElementById("weather_status").innerHTML  = values.weather[0].description
-            document.getElementById("country").innerHTML  = values.sys.country
-           document.getElementById("wind_speed").innerHTML  = values.wind.speed
+            document.getElementById('temperature').innerHTML = values.main.temp
+            document.getElementById("weather_status").innerHTML = values.weather[0].description
+            document.getElementById("country").innerHTML = values.sys.country
+            document.getElementById("wind_speed").innerHTML = values.wind.speed
 
 
         }
     </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
 </body>
 
 </html>
