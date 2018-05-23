@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <style>
+        h1 {
+            color: black;
+            text-align: center;
+            font-size: 50px;
+        }
+
+        p {
+            color: black;
+            font-family: verdana;
+            font-size: 20px;
+        }
+
+        .textarea {
+            text-align: center;
+            resize: none;
+            margin-top: 50px;
+        }
+
+        .btn {
+            position: relative;
+            left: 800px;
+
+        }
+
+        .table .cityNameColumn {
+            width: 30% ;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>How is weather today?</h1>
+    <p>
+        The city you want to learn about the weather :
+        <textarea id="cityNameValue" class="textarea" rows="1" cols="30"></textarea>
+    </p>
+    <button type="button" onclick="sendRequest()" class="btn">Send</button>
+    
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="cityNameColumn" scope="col">CityName</th>
+                <th class="values" scope="col">Values</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">°C</th>
+                <td id="temperature">-</td>
+
+            </tr>
+            <tr>
+                <th scope="row">Status</th>
+                <td id="weather_status">-</td>
+
+            </tr>
+            <tr>
+                <th scope="row">Country</th>
+                <td id="country">-</td>
+            </tr>
+            <tr>
+                <th scope="row">Wind Speed (km)</th>
+                <td id="wind_speed">-</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function sendRequest() {
+            var cityName = document.getElementById("cityNameValue").value
+            var httpRequest = new XMLHttpRequest()
+            console.log(cityName)
+            httpRequest.open('GET', 'http://localhost:8080/weather/getWeather/getByCityName?cityName=' + cityName, true)
+            httpRequest.onreadystatechange = function () {
+                // Process the server response here.
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        var jsonResponse = JSON.parse(httpRequest.responseText)
+                        insertValuesFromApi(jsonResponse)
+                    } else {
+                        alert('There was a problem with the request.');
+                    }
+                }
+            }
+            httpRequest.send()
+        }
+        function insertValuesFromApi(values) {
+           document.getElementById('temperature').innerHTML = values.main.temp
+           document.getElementById("weather_status").innerHTML  = values.weather[0].description
+            document.getElementById("country").innerHTML  = values.sys.country
+           document.getElementById("wind_speed").innerHTML  = values.wind.speed
+
+
+        }
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
