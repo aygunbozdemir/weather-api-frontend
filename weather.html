@@ -54,14 +54,24 @@
             margin: 15px 40%;
 
         }
-    
+
+        .loading {
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
     </style>
+    <link rel="stylesheet" type="text/css" href="loading.css">
+
 </head>
 
 <body>
-       
+    <div class="loading"></div>
 
     <div class="container">
+
         <div class="row">
             <div class="col-sm-12">
                 <div id="intro">
@@ -127,8 +137,6 @@
             <p id="loc">-</p>
         </div>
     </div>
-    
-
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -139,6 +147,7 @@
 
     <script>
         function sendRequest() {
+            startPreload();
             var cityName = document.getElementById("cityNameValue").value
             var httpRequest = new XMLHttpRequest()
             console.log(cityName)
@@ -152,11 +161,24 @@
                     } else {
                         alert(cityName + ' does not exist in this API!');
                     }
+                    setTimeout(function () {
+                        stopPreload();
+                    }, 1000)
+
                 }
             }
             httpRequest.send()
         }
+
+        function startPreload() {
+            $(".loading").addClass("active");
+        }
+
+        function stopPreload() {
+            $(".loading").removeClass("active");
+        }
         function showPosition(position) {
+            startPreload();
 
             var httpRequest = new XMLHttpRequest()
             httpRequest.open('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&appid=2307c4fb0bedb1b9f1bcbbe8e91814d1&&units=metric', true)
@@ -170,9 +192,12 @@
                         alert(cityName + ' does not exist in this API!');
                     }
                 }
+                //this is for visual exp. not use with prod.
+                setTimeout(function () {
+                    stopPreload();
+                }, 1000)
             }
             httpRequest.send()
-
         }
         function insertValuesFromApi(values) {
             document.getElementById('temperature').innerHTML = values.main.temp
@@ -181,21 +206,16 @@
             document.getElementById("wind_speed").innerHTML = values.wind.speed
             document.getElementById("loc").innerHTML = values.name
 
+
         }
-
-
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
+
+
         } else {
             alert("Geolocation is not supported by this browser.");
         }
-
-
-
-
-        
-
 
     </script>
 
