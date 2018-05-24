@@ -11,12 +11,9 @@
         html {
             height: 100%;
         }
+
         body {
-            background-image: linear-gradient(0deg,rgba(255,255,255,0.4),rgba(255,255,255,0.4)), url("res/bg.jpg");
-            height: 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-color: antiquewhite;
         }
 
         #intro {
@@ -52,11 +49,17 @@
                 width: 100%;
             }
         }
-        
+
+        .location {
+            margin: 15px 40%;
+
+        }
+    
     </style>
 </head>
 
 <body>
+       
 
     <div class="container">
         <div class="row">
@@ -82,32 +85,50 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="cityNameColumn" scope="col">CityName</th>
-                            <th class="values" scope="col">Values</th>
+                            <th class="cityNameColumn" scope="col">
+                                <b> </b>
+                            </th>
+                            <th class="values" scope="col">
+                                <b>Values</b>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">°C</th>
+                            <th scope="row">
+                                <b>°C</b>
+                            </th>
                             <td id="temperature">-</td>
                         </tr>
                         <tr>
-                            <th scope="row">Status</th>
+                            <th scope="row">
+                                <b>Status</b>
+                            </th>
                             <td id="weather_status">-</td>
                         </tr>
                         <tr>
-                            <th scope="row">Country</th>
+                            <th scope="row">
+                                <b>Country</b>
+                            </th>
                             <td id="country">-</td>
                         </tr>
                         <tr>
-                            <th scope="row">Wind Speed (km)</th>
+                            <th scope="row">
+                                <b>Wind Speed (km)</b>
+                            </th>
                             <td id="wind_speed">-</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <div class="location">
+            <p>Konumunuz :</p>
+            <p id="loc">-</p>
+        </div>
     </div>
+    
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -135,14 +156,49 @@
             }
             httpRequest.send()
         }
+        function showPosition(position) {
 
+            var httpRequest = new XMLHttpRequest()
+            httpRequest.open('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&appid=2307c4fb0bedb1b9f1bcbbe8e91814d1&&units=metric', true)
+            httpRequest.onreadystatechange = function () {
+                // Process the server response here.
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        var jsonResponse = JSON.parse(httpRequest.responseText)
+                        insertValuesFromApi(jsonResponse)
+                    } else {
+                        alert(cityName + ' does not exist in this API!');
+                    }
+                }
+            }
+            httpRequest.send()
+
+        }
         function insertValuesFromApi(values) {
             document.getElementById('temperature').innerHTML = values.main.temp
             document.getElementById("weather_status").innerHTML = values.weather[0].description
             document.getElementById("country").innerHTML = values.sys.country
             document.getElementById("wind_speed").innerHTML = values.wind.speed
+            document.getElementById("loc").innerHTML = values.name
+
         }
+
+
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+
+
+
+
+        
+
+
     </script>
+
 </body>
 
 </html>
